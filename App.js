@@ -10,6 +10,7 @@ import { vw, vh, vmin, vmax } from "react-native-expo-viewport-units";
 import ChatBox from './ChatBox';
 import LoginScreen from "./screens/LoginScreen"
 import RegisterScreen from "./screens/RegisterScreen";
+import HomeScreen from './screens/HomeScreen';
 
 
 const Stack = createStackNavigator()
@@ -39,6 +40,10 @@ export default function App(){
           }}
           name="Register"
           component={RegisterScreen}
+        />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

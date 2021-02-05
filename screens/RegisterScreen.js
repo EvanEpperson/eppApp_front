@@ -24,7 +24,7 @@ const RegisterScreen = ({navigation}) => {
     const register = () => {
         auth.createUserWithEmailAndPassword(email,password)
         .then(authUser => {
-            authUser.user.update({
+            authUser.user.updateProfile({
                 displayName: name,
                 photoURL: 
                     imageURL || 
@@ -50,27 +50,27 @@ const RegisterScreen = ({navigation}) => {
             autofocus
             type="text"
             value={name}
-            conChangeText={(text) => setName(text)}
+            onChangeText={(text) => setName(text)}
           />
           <Input
             placeholder="Email"
             
-            type="text"
+            type="email"
             value={email}
-            conChangeText={(text) => setEmail(text)}
+            onChangeText={(text) => setEmail(text)}
           />
           <Input
             placeholder="Password"
             secureTextEntry
-            type="text"
+            type="password"
             value={password}
-            conChangeText={(text) => setPassword(text)}
+            onChangeText={(text) => setPassword(text)}
           />
           <Input
             placeholder="Profile picture Url(optional)"
-            
             type="text"
             value={imageUrl}
+            onChangeText={(text) => setImageUrl(text)}
             // this is so that when we click enter it will auto go to register so that you dont have to click it also but thats only if you do it on this placeholder 
             onSubmitEditing={register}
           />

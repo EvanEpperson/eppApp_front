@@ -16,10 +16,12 @@ const LoginScreen = ({navigation}) => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged( (authUser) => {
       if(authUser){
+        // this will send the page back to home instead of login again , after we create a user and the replace takes the back button off so you cant go back to the loggin screen and use it again while already logged in 
           navigation.replace("Home")
       }
     })
-
+      // this is saying if a user is found anywhere log them in , so it saves you esentially and lets it so that you dont have to log in everytime
+      
     return unsubscribe;
   }, [] )
 
