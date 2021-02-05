@@ -21,7 +21,7 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
       <View style={styles.container_body}>
-        <Sidebar />
+        {/* <Sidebar /> */}
         <ChatBox />
       </View>
     </SafeAreaView>

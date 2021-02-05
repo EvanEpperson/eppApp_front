@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   chat: {
     display: "flex",
     flexDirection: "column",
-    flex: 0.65,
+    // flex: 0.65,
     borderColor: "blue",
     borderWidth: 1,
     fontSize: 400
