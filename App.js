@@ -10,6 +10,7 @@ import ChatBox from './ChatBox';
 import LoginScreen from "./screens/LoginScreen"
 import RegisterScreen from "./screens/RegisterScreen";
 import HomeScreen from './screens/HomeScreen';
+import AddChatScreen from './screens/AddChatScreen';
 
 
 const Stack = createStackNavigator()
@@ -25,10 +26,11 @@ export default function App(){
   return (
     <NavigationContainer>
       {/* stacking apps  */}
-      <Stack.Navigator 
-      // this will make it be whatever stack you want so that you dont have to keep going back through stacks to change stuff around , this will make it the first page everytime 
-      initialRouteName = "Login"
-      screenOptions={globalScreenOptions}>
+      <Stack.Navigator
+        // this will make it be whatever stack you want so that you dont have to keep going back through stacks to change stuff around , this will make it the first page everytime
+        initialRouteName="Login"
+        screenOptions={globalScreenOptions}
+      >
         <Stack.Screen
           options={{
             title: "EvMessaging",
@@ -43,10 +45,8 @@ export default function App(){
           name="Register"
           component={RegisterScreen}
         />
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-        />
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="AddChat" component={AddChatScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

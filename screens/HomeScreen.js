@@ -3,6 +3,7 @@ import { StyleSheet, ScrollView, Text, View, SafeAreaView, TouchableOpacity } fr
 import { Avatar } from 'react-native-elements'
 import CustomListItem from '../components/CustomListItem'
 import { auth, db } from "../firebase"
+import {AntDesign, SimpleLineIcons} from "@expo/vector-icons"
 
 const HomeScreen = ({navigation}) => {
 
@@ -20,6 +21,7 @@ const HomeScreen = ({navigation}) => {
           headerTitleStyle: { color: "blue" },
           //   for the icons to be black
           headerTintColor: "black",
+          // () instead of {} for a direct return to see it on the page without having to call it 
           headerLeft: () => (
             <View style={{ marginLeft: 20 }}>
               {/* makes the picture or whatever it is wrapping touchable  */}
@@ -29,8 +31,25 @@ const HomeScreen = ({navigation}) => {
               </TouchableOpacity>
             </View>
           ),
+          headerRight: () => (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                width: 80,
+                marginRight: 20,
+              }}
+            >
+              <TouchableOpacity activeOpacity={0.5}>
+                <AntDesign name="camerao" size={24} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate("AddChat") } activeOpacity={0.5}>
+                <SimpleLineIcons name="pencil" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+          ),
         });
-    }, [])
+    }, [navigation])
 
 
 
