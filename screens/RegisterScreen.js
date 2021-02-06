@@ -27,7 +27,7 @@ const RegisterScreen = ({navigation}) => {
             authUser.user.updateProfile({
                 displayName: name,
                 photoURL: 
-                    imageURL || 
+                    imageUrl || 
                     "https://i.pinimg.com/originals/51/f6/fb/51f6fb256629fc755b8870c801092942.png"
             })
         })

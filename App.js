@@ -1,4 +1,3 @@
-
 import React from 'react';
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
@@ -26,7 +25,10 @@ export default function App(){
   return (
     <NavigationContainer>
       {/* stacking apps  */}
-      <Stack.Navigator screenOptions={globalScreenOptions}>
+      <Stack.Navigator 
+      // this will make it be whatever stack you want so that you dont have to keep going back through stacks to change stuff around , this will make it the first page everytime 
+      initialRouteName = "Login"
+      screenOptions={globalScreenOptions}>
         <Stack.Screen
           options={{
             title: "EvMessaging",

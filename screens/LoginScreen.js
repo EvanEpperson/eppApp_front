@@ -15,7 +15,11 @@ const LoginScreen = ({navigation}) => {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged( (authUser) => {
+      console.log('====================================');
+      console.log(authUser);
+      console.log('====================================');
       if(authUser){
+      
         // this will send the page back to home instead of login again , after we create a user and the replace takes the back button off so you cant go back to the loggin screen and use it again while already logged in 
           navigation.replace("Home")
       }
@@ -25,7 +29,8 @@ const LoginScreen = ({navigation}) => {
     return unsubscribe;
   }, [] )
 
-  const signin = () => {
+  const signIn = () => {
+    auth.signInWithEmailAndPassword(email, password).catch(error => alert(error))
 
   }
 
@@ -61,11 +66,12 @@ const LoginScreen = ({navigation}) => {
           type="password"
           value={password}
           onChangeText={(text) => setPassword(text)}
+          onSubmitEditing={signIn}
         />
       </View>
       {/* auto flex and by defualt it is in a column not a row, you wrap buttons with container style instead of just style because its a react native thing. not sure why   */}
       {/* everything is onPress not on click now */}
-      <Button containerStyle={styles.button} onPress={signin} title="Login" />
+      <Button containerStyle={styles.button} onPress={signIn} title="Login" />
       {/* outline gives it a clear background and just outlines it in the stock color that it was already*/}
       {/* onPress with navigation.navigate will allow it to go back and forth and then since they are all in the same stack you can swipe back and forth instead of pressing the buttons  */}
       <Button onPress={() => navigation.navigate('Register') } containerStyle={styles.button}  type="outline" title="Register" />
