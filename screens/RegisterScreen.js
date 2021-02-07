@@ -1,16 +1,27 @@
 import React, { useLayoutEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
+import * as ImagePicker from "react-native-image-picker";
 import { StyleSheet, View, KeyboardAvoidingView } from "react-native";
 import { Button, Input, Image, Text } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {auth} from "../firebase"
+import TestingImages from "./TestingImages";
 
+const options = {
+  title: "Select Avatar",
+  customButtons: [{ name: "fb", title: "Choose Photo from Facebook" }],
+  storageOptions: {
+    skipBackup: true,
+    path: "images",
+  },
+};
 
 const RegisterScreen = ({navigation}) => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [imageUrl, setImageUrl] = useState("");
+
 
 
     // just before it scrolls to the other screen do this 
@@ -35,6 +46,43 @@ const RegisterScreen = ({navigation}) => {
     }
 
 
+  chooseImage = () => {
+    let options = {
+      title: "Select Image",
+      customButtons: [
+        { name: "customOptionKey", title: "Choose Photo from Custom Option" },
+      ],
+      storageOptions: {
+        skipBackup: true,
+        path: "images",
+      },
+    };
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log("Response = ", response);
+
+      if (response.didCancel) {
+        console.log("User cancelled image picker");
+      } else if (response.error) {
+        console.log("ImagePicker Error: ", response.error);
+      } else if (response.customButton) {
+        console.log("User tapped custom button: ", response.customButton);
+        alert(response.customButton);
+      } else {
+        const source = { uri: response.uri };
+
+        // You can also display the image using data:
+        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+        // alert(JSON.stringify(response));s
+        console.log("response", JSON.stringify(response));
+        this.setState({
+          filePath: response,
+          fileData: response.data,
+          fileUri: response.uri,
+        });
+      }
+    });
+  };
+
 
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -54,7 +102,6 @@ const RegisterScreen = ({navigation}) => {
           />
           <Input
             placeholder="Email"
-            
             type="email"
             value={email}
             onChangeText={(text) => setEmail(text)}
@@ -71,17 +118,22 @@ const RegisterScreen = ({navigation}) => {
             type="text"
             value={imageUrl}
             onChangeText={(text) => setImageUrl(text)}
-            // this is so that when we click enter it will auto go to register so that you dont have to click it also but thats only if you do it on this placeholder 
+            // this is so that when we click enter it will auto go to register so that you dont have to click it also but thats only if you do it on this placeholder
             onSubmitEditing={register}
           />
         </View>
         {/* again with the on press and then raised will give it a slightly better look  */}
-        <Button style={styles.button}
-            raised
-            onPress={register}
-            title="Register Now"
-        /> 
-        <View style={{ height: 100, }}/>
+        <Button
+          style={styles.button}
+          raised
+          onPress={register}
+          title="Register Now"
+        />
+
+        <Button onPress={chooseImage} style={styles.button} />
+
+        <TestingImages />
+        <View style={{ height: 100 }} />
       </KeyboardAvoidingView>
     );
 }
@@ -98,7 +150,8 @@ const styles = StyleSheet.create({
     },
     button: {
         width: 200,
-        // marginTop: 10,
+        marginTop: 10,
+        color: 'red',
     },
     inputContainer: {
         width: 300,
