@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { StyleSheet, ScrollView, Text, View, SafeAreaView, TouchableOpacity } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import CustomListItem from '../components/CustomListItem'
@@ -6,6 +6,9 @@ import { auth, db } from "../firebase"
 import {AntDesign, SimpleLineIcons} from "@expo/vector-icons"
 
 const HomeScreen = ({navigation}) => {
+  const [chats, setChats] = useState([]);
+
+
 
     const signOutUser = () => {
        auth.signOut().then(() => {
@@ -13,11 +16,25 @@ const HomeScreen = ({navigation}) => {
        }) 
     }
 
+    useEffect(() => {
+      // we're calling the db that we just made and it is called chats 
+        const unsubscribe = db.collection('chats').onSnapshot(snapshot => 
+          setChats(snapshot.docs.map(doc => ({
+            // id is the id of the actual chate and the data is the name of the chat that goes with the id , you have to use () after doc.data
+            id: doc.id,
+            data: doc.data(),
+          }))
+          )
+        )
+        // if you dont do this it will make a memory leak and keep calling and make it lack performance
+        return unsubscribe
+    }, [])
+
     useLayoutEffect(() => {
         // setting all of the homescreen settings different from the rest 
         navigation.setOptions({
           title: "Pen Pals",
-          //   headerStyle: { backgroundColor: "#745565" },
+            headerStyle: { backgroundColor: "white" },
           headerTitleStyle: { color: "blue" },
           //   for the icons to be black
           headerTintColor: "black",
@@ -51,12 +68,26 @@ const HomeScreen = ({navigation}) => {
         });
     }, [navigation])
 
-
+    const enterChat = (id, chatName) => {
+      navigation.navigate('Chat', {
+        // if the value is the same name you dont have to do id:id or chatName:chatName you can just call them chatName
+        id,
+        chatName,
+      })
+    }
 
     return (
         <SafeAreaView>
-            <ScrollView>
-                <CustomListItem />
+          {/* setting the height to 100% will make the scroll cleaner and that you cant go in and out not seeing the chat  */}
+            <ScrollView style={styles.container}>
+              {chats.map(({id, data: {chatName}}) => (
+                // everythign that we call such as enterChat={enterChat } is passing through kinda like props but without the need for props 
+                <CustomListItem 
+                key={id}
+                id={id}
+                chatName={chatName}
+                enterChat={enterChat} />
+              ))}
             </ScrollView>
         </SafeAreaView>
     )
@@ -64,4 +95,9 @@ const HomeScreen = ({navigation}) => {
 
 export default HomeScreen
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  // this style is the scroll view to make it look better when scrollign 
+  container: {
+    height: "100%",
+  }
+})

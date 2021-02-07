@@ -22,7 +22,7 @@ const RegisterScreen = ({navigation}) => {
     const [password, setPassword] = useState("");
     const [imageUrl, setImageUrl] = useState("");
 
-
+      
 
     // just before it scrolls to the other screen do this 
     useLayoutEffect(() => {

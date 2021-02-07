@@ -5,7 +5,7 @@ import {ListItem, Avatar } from "react-native-elements"
 const CustomListItem = ({id, chatName, enterChat}) => {
     return (
         // this is the same as a li for the most part so far that i can understand 
-      <ListItem>
+      <ListItem onPress={() => enterChat(id, chatName)} key={id} bottomDivider >
           {/* another picture that dipslays as already a circle and thats waht rounded does  */}
         <Avatar
           rounded
@@ -16,7 +16,8 @@ const CustomListItem = ({id, chatName, enterChat}) => {
         />
         <ListItem.Content>
             <ListItem.Title style={{ fontWeight: '800'}}>
-                Main Chat
+              {/* passing through the chat name from the homescreen changes the hardcoded value to now the value that we made up  */}
+                {chatName}
             </ListItem.Title >
             {/* this will make it so that it has the three dots after the first line of text so that you know you have more to read but it wont go outside of the acutal box , also you put number of lines so that you can either have just 1 or as many as you would like  */}
             <ListItem.Subtitle 
