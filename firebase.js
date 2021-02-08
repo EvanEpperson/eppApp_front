@@ -16,6 +16,19 @@ import "firebase/auth";
     measurementId: "G-3P2L2B760R"
   };
 
+
+  // var firebaseConfig = {
+  //   apiKey: "AIzaSyB7t1HpPUolF1HWAs7d-6OmxGQnYPvD5Z8",
+  //   authDomain: "epp-messaging.firebaseapp.com",
+  //   // For databases not in the us-central1 location, databaseURL will be of the
+  //   // form https://[databaseName].[region].firebasedatabase.app.
+  //   // For example, https://your-database-123.europe-west1.firebasedatabase.app
+  //   databaseURL: "https://epp-messaging-default-rtdb.firebaseio.com/",
+  //   storageBucket: "bucket.appspot.com",
+  // };
+  // firebase.initializeApp(firebaseConfig);
+
+
   let app;
 
   if(firebase.apps.length === 0){
@@ -34,7 +47,10 @@ import "firebase/auth";
 // });
 
 
-  const db = app.firestore()
+
+  const db = app.firestore();
+  // var database = firebase.database()
+  // const db = firebase.database();
   const auth = firebase.auth()
 
   export {db, auth};
