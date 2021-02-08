@@ -5,6 +5,7 @@ import {AntDesign, FontAwesome, Ionicons} from "@expo/vector-icons"
 import { StatusBar } from 'expo-status-bar'
 import * as firebase from "firebase";
 import {db, auth} from "../firebase";
+import InvertibleScrollView from "react-native-invertible-scroll-view";
 
 
 const ChatScreen = ({navigation, route}) => {
@@ -28,7 +29,7 @@ const ChatScreen = ({navigation, route}) => {
               <Avatar
                 rounded
                 source={{
-                  uri:
+                  uri: messages[0]?.data.photoURL || 
                     "https://i.pinimg.com/originals/51/f6/fb/51f6fb256629fc755b8870c801092942.png",
                 }}
               />
@@ -68,11 +69,11 @@ const ChatScreen = ({navigation, route}) => {
             </View>
           ),
         });
-    }, [navigation, route])
+    }, [navigation, route, messages])
 
     const sendMessage = () => {
         // have to import it , and it makes the keyboard disapear as you send messages , not sure if i want to keep it or not yet , may get very annoying 
-         Keyboard.dismiss(); 
+        //  Keyboard.dismiss(); 
 
          db.collection('chats').doc(route.params.id).collection('messages').add({
              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
@@ -100,16 +101,6 @@ const ChatScreen = ({navigation, route}) => {
         return unsubscribe;
     }, [route])
 
-    // useLayoutEffect(() => {
-    //     const unsubscribe = db.collection('chats').doc(route.params.id).collection('messages').orderBy('timestamp', 'desc').onSnapShot(snapshot => setMessages(snapshot.docs.map(doc => ({
-    //         id: doc.id,
-    //         data: doc.data()
-    //     }))))
-    //     return unsubscribe
-    //     console.log('testing====================================testing ');
-    //     console.log(setMessages);
-    //     console.log('====================================');
-    // }, [route])
 
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -122,7 +113,7 @@ const ChatScreen = ({navigation, route}) => {
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <>
-              <ScrollView contentContainerStyle={{paddingTop: 15}} >
+              <ScrollView contentContainerStyle={{ paddingTop: 15 }} >
                 {/* chat goes here  */}
                 {messages.map(({ id, data }) =>
                   data.email === auth.currentUser.email ? (
@@ -146,8 +137,7 @@ const ChatScreen = ({navigation, route}) => {
                       <Text style={styles.recieverText}>{data.message}</Text>
                     </View>
                   ) : (
-                    <View style={styles.sender}>
-                      <Avatar
+                    <View key={id} style={styles.sender}> <Avatar
                         position="absolute"
                         // helps with webstyling apparently
                         containerStyle={{
@@ -175,6 +165,8 @@ const ChatScreen = ({navigation, route}) => {
                   onChangeText={(text) => setInput(text)}
                   placeholder="Signal Message"
                   style={styles.textInput}
+                //   no clue why but this makes the keyboard stay up when you type stuff out 
+                  blurOnSubmit={false}
                   onSubmitEditing={sendMessage}
                 />
                 {/*  */}

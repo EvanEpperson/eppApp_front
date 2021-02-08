@@ -1,16 +1,28 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import {ListItem, Avatar } from "react-native-elements"
+import { auth, db } from "../firebase"
+
 
 const CustomListItem = ({id, chatName, enterChat}) => {
+  const [chatMessages, setChatMessages] = useState([])
+
+
+  useEffect(() => {
+    const unsubscribe = db.collection('chats').doc(id).collection('messages').orderBy('timestamp', 'desc').onSnapshot(snapshot => 
+      setChatMessages(snapshot.docs.map(doc => doc.data()))
+    )
+    return unsubscribe
+  })
+
     return (
         // this is the same as a li for the most part so far that i can understand 
-      <ListItem onPress={() => enterChat(id, chatName)} key={id} bottomDivider >
+      <ListItem key={id} onPress={() => enterChat(id, chatName)} key={id} bottomDivider >
           {/* another picture that dipslays as already a circle and thats waht rounded does  */}
         <Avatar
           rounded
           source={{
-            uri:
+            uri: chatMessages?.[0]?.photoURL ||
               "https://i.pinimg.com/originals/51/f6/fb/51f6fb256629fc755b8870c801092942.png",
           }}
         />
@@ -23,7 +35,7 @@ const CustomListItem = ({id, chatName, enterChat}) => {
             <ListItem.Subtitle 
             numberOfLines={1} 
             ellipsizeMode="tail" >
-                this is a test subtitle and what i want to do is test out how long this can actually go 
+                {chatMessages?.[0]?.displayName}   {chatMessages?.[0]?.message}
             </ListItem.Subtitle>
 
         </ListItem.Content>
