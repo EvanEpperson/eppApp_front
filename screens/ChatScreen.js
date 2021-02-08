@@ -84,29 +84,32 @@ const ChatScreen = ({navigation, route}) => {
          setInput('')
     }
 
-    // useLayoutEffect(() => {
-    //     const unsubscribe = db
-    //     .collection('chats')
-    //     .doc(route.params.id)
-    //     .collection('messages')
-    //     .orderBy('timestamp', 'desc')
-    //     .onSnapShot((snapshot) => setMessages(
-    //         snapshot.docs.map((doc) => ({
-    //             id: doc.id,
-    //             data: doc.data(),
-    //         }))
-    //     ))
-    //     return unsubscribe;
-    // }, [route])
-
     useLayoutEffect(() => {
-        const unsubscribe = db.collection('chats').doc(route.params.id).collection('messages').orderBy('timestamp', 'desc').onSnapShot(snapshot => setMessages(snapshot.docs.map(doc => ({
-            id: doc.id,
-            data: doc.data()
-        }))))
-        return unsubscribe
-
+        const unsubscribe = db
+        .collection('chats')
+        .doc(route.params.id)
+        .collection('messages')
+        .orderBy('timestamp', 'desc')
+        .onSnapshot((snapshot) => setMessages(
+            snapshot.docs.map(doc => ({
+                id: doc.id,
+                data: doc.data(),
+            }))
+        ))
+        console.log(messages);
+        return unsubscribe;
     }, [route])
+
+    // useLayoutEffect(() => {
+    //     const unsubscribe = db.collection('chats').doc(route.params.id).collection('messages').orderBy('timestamp', 'desc').onSnapShot(snapshot => setMessages(snapshot.docs.map(doc => ({
+    //         id: doc.id,
+    //         data: doc.data()
+    //     }))))
+    //     return unsubscribe
+    //     console.log('testing====================================testing ');
+    //     console.log(setMessages);
+    //     console.log('====================================');
+    // }, [route])
 
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -119,7 +122,21 @@ const ChatScreen = ({navigation, route}) => {
         >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <>
-              <ScrollView>{/* chat goes here  */}</ScrollView>
+              <ScrollView>
+                {/* chat goes here  */}
+                {messages.map(({ id, data }) =>
+                  data.email === auth.currentUser.email ? (
+                    <View key={id} style={styles.reciever}>
+                      <Avatar />
+                      <Text style={styles.recieverText}>{data.message}</Text>
+                    </View>
+                  ) : (
+                    <View style={styles.sender}>
+                      <Text style={styles.senderText}>{data.message}</Text>
+                    </View>
+                  )
+                )}
+              </ScrollView>
               <View style={styles.footer}>
                 <TextInput
                   value={input}
@@ -145,6 +162,25 @@ export default ChatScreen
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  reciever: {
+      padding: 15,
+      backgroundColor: '#ECECEC',
+      alignSelf: 'flex-end',
+      borderRadius: 20,
+      marginRight: 15,
+      marginBottom: 20,
+      maxWidth: '80%',
+      position: "relative"
+  },
+  sender: {
+      padding: 15,
+      backgroundColor: 'red',
+      alignSelf: 'flex-start',
+      borderRadius: 20,
+      margin: 15,
+      maxWidth: '80%',
+      position: 'relative',
   },
   footer: {
       flexDirection: 'row',
