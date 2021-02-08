@@ -1,28 +1,48 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import * as ImagePicker from "react-native-image-picker";
+import * as ImagePicker from "expo-image-picker";
 import { StyleSheet, View, KeyboardAvoidingView } from "react-native";
 import { Button, Input, Image, Text } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import {auth} from "../firebase"
 import TestingImages from "./TestingImages";
 
-const options = {
-  title: "Select Avatar",
-  customButtons: [{ name: "fb", title: "Choose Photo from Facebook" }],
-  storageOptions: {
-    skipBackup: true,
-    path: "images",
-  },
-};
 
 const RegisterScreen = ({navigation}) => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [imageUrl, setImageUrl] = useState("");
+    const [image, setImage] = useState(null);
 
-      
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const {
+          status,
+        } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to make this work!");
+        }
+      }
+    })();
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
 
     // just before it scrolls to the other screen do this 
     useLayoutEffect(() => {
@@ -45,43 +65,6 @@ const RegisterScreen = ({navigation}) => {
         .catch((error) => alert(error.message))
     }
 
-
-  chooseImage = () => {
-    let options = {
-      title: "Select Image",
-      customButtons: [
-        { name: "customOptionKey", title: "Choose Photo from Custom Option" },
-      ],
-      storageOptions: {
-        skipBackup: true,
-        path: "images",
-      },
-    };
-    ImagePicker.showImagePicker(options, (response) => {
-      console.log("Response = ", response);
-
-      if (response.didCancel) {
-        console.log("User cancelled image picker");
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
-      } else if (response.customButton) {
-        console.log("User tapped custom button: ", response.customButton);
-        alert(response.customButton);
-      } else {
-        const source = { uri: response.uri };
-
-        // You can also display the image using data:
-        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-        // alert(JSON.stringify(response));s
-        console.log("response", JSON.stringify(response));
-        this.setState({
-          filePath: response,
-          fileData: response.data,
-          fileUri: response.uri,
-        });
-      }
-    });
-  };
 
 
     return (
@@ -130,7 +113,12 @@ const RegisterScreen = ({navigation}) => {
           title="Register Now"
         />
 
-        <Button onPress={chooseImage} style={styles.button} />
+        <Button
+          title="pick an image from camera roll"
+          onPress={pickImage}
+          style={styles.button}
+        />
+        {/* <Image style={styles.image} source={{ uri: setImage}} /> */}
 
         <TestingImages />
         <View style={{ height: 100 }} />

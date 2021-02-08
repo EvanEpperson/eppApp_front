@@ -97,7 +97,6 @@ const ChatScreen = ({navigation, route}) => {
                 data: doc.data(),
             }))
         ))
-        console.log(messages);
         return unsubscribe;
     }, [route])
 
@@ -137,7 +136,8 @@ const ChatScreen = ({navigation, route}) => {
                       <Text style={styles.recieverText}>{data.message}</Text>
                     </View>
                   ) : (
-                    <View key={id} style={styles.sender}> <Avatar
+                    <View key={id} style={styles.sender}> 
+                    <Avatar
                         position="absolute"
                         // helps with webstyling apparently
                         containerStyle={{
